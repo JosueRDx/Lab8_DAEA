@@ -12,4 +12,7 @@ public interface IClientService
 
     // Ejercicio 12: Obtener Todos los Clientes que Han Comprado un Producto Específico
     Task<IEnumerable<string>> GetByProductPurchase(int productId);
+    
+    // Nuevo método para LINQ Avanzado
+    Task<IEnumerable<ClientOrdersDto>> GetAllClientsWithOrders();
 }

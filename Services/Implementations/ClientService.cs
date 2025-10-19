@@ -65,4 +65,25 @@ public class ClientService : IClientService
             .Distinct()
             .ToListAsync();
     }
+    
+    // Implementación del nuevo método de LINQ Avanzado
+    public async Task<IEnumerable<ClientOrdersDto>> GetAllClientsWithOrders()
+    {
+        var clientOrders = await _unitOfWork.Repository<Client>()
+            .AsQueryable()
+            .AsNoTracking() // Mejora el rendimiento para consultas de solo lectura
+            .Select(client => new ClientOrdersDto
+            {
+                ClientName = client.Name,
+                Orders = client.Orders
+                    .Select(order => new SimpleOrderDto
+                    {
+                        OrderId = order.Orderid,
+                        OrderDate = order.Orderdate
+                    }).ToList()
+            })
+            .ToListAsync();
+
+        return clientOrders;
+    }
 }
