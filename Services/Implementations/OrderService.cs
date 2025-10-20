@@ -42,43 +42,18 @@ public class OrderService : IOrderService
     // Ejercicio 6: Obtener Todos los Pedidos Realizados Después de una Fecha Específica
     public async Task<IEnumerable<OrderDto>> GetOrdersAfterDate(DateTime date)
     {
-        // Nota: Este método ahora también devuelve los detalles de cada orden.
-        return await _unitOfWork.Repository<Order>()
+        var query = _unitOfWork.Repository<Order>()
             .AsQueryable()
-            .Where(o => o.Orderdate > date)
-            .Include(o => o.Orderdetails)
-            .ThenInclude(od => od.Product)
-            .Select(o => new OrderDto // Mapeamos al DTO principal
-            {
-                OrderId = o.Orderid,
-                OrderDate = o.Orderdate,
-                Products = o.Orderdetails.Select(od => new OrderDetailDto // Mapeamos la lista interna
-                {
-                    ProductName = od.Product.Name,
-                    Quantity = od.Quantity
-                }).ToList()
-            })
-            .ToListAsync();
+            .Where(o => o.Orderdate > date);
+
+        return await ProjectToOrderDto(query).ToListAsync();
     }
 
     // Ejercicio 10: Obtener Todos los Pedidos y sus Detalles
     public async Task<IEnumerable<OrderDto>> GetAllWithDetails()
     {
-        return await _unitOfWork.Repository<Order>()
-            .AsQueryable()
-            .Include(o => o.Orderdetails)
-            .ThenInclude(od => od.Product) 
-            .Select(o => new OrderDto // Mapeamos al DTO
-            {
-                OrderId = o.Orderid,
-                OrderDate = o.Orderdate,
-                Products = o.Orderdetails.Select(od => new OrderDetailDto
-                {
-                    ProductName = od.Product.Name,
-                    Quantity = od.Quantity
-                }).ToList()
-            })
-            .ToListAsync();
+        var query = _unitOfWork.Repository<Order>().AsQueryable();
+        return await ProjectToOrderDto(query).ToListAsync();
     }
 
     // Ejercicio 11: Obtener Todos los Productos Vendidos por un Cliente Específico
@@ -91,5 +66,31 @@ public class OrderService : IOrderService
             .Select(od => od.Product.Name)
             .Distinct()
             .ToListAsync();
+    }
+    
+    // Implementación del nuevo método 
+    public async Task<IEnumerable<OrderDto>> GetAllOrdersWithProductDetailsAsNoTracking()
+    {
+        var query = _unitOfWork.Repository<Order>().AsQueryable().AsNoTracking();
+        return await ProjectToOrderDto(query).ToListAsync();
+    }
+    
+    private IQueryable<OrderDto> ProjectToOrderDto(IQueryable<Order> query)
+    {
+        // La lógica de mapeo en un solo lugar.
+        return query
+            .Include(o => o.Orderdetails)
+            .ThenInclude(od => od.Product) 
+            .Select(o => new OrderDto
+            {
+                OrderId = o.Orderid,
+                OrderDate = o.Orderdate,
+                Products = o.Orderdetails.Select(od => new ProductDetailDto
+                {
+                    ProductName = od.Product.Name,
+                    Quantity = od.Quantity,
+                    Price = od.Product.Price
+                }).ToList()
+            });
     }
 }

@@ -19,4 +19,7 @@ public interface IOrderService
     
     // Ejercicio 11: Obtener Todos los Productos Vendidos por un Cliente Específico
     Task<IEnumerable<string>> GetProductsSoldToClient(int clientId);
+    
+    // Nuevo método para el ejercicio de Include
+    Task<IEnumerable<OrderDto>> GetAllOrdersWithProductDetailsAsNoTracking();
 }

@@ -5,5 +5,5 @@ public class OrderDto
 {
     public int OrderId { get; set; }
     public DateTime OrderDate { get; set; }
-    public List<OrderDetailDto> Products { get; set; } = new();
+    public List<ProductDetailDto> Products { get; set; } = new();
 }

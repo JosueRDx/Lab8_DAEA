@@ -60,4 +60,12 @@ public class OrdersController : ControllerBase
         var productNames = await _orderService.GetProductsSoldToClient(clientId);
         return Ok(productNames);
     }
+    
+// GET: api/orders/with-product-details
+    [HttpGet("with-product-details")]
+    public async Task<IActionResult> GetAllOrdersWithProductDetailsAsNoTracking()
+    {
+        var result = await _orderService.GetAllOrdersWithProductDetailsAsNoTracking();
+        return Ok(result);
+    }
 }
