@@ -15,4 +15,7 @@ public interface IClientService
     
     // Nuevo método para LINQ Avanzado
     Task<IEnumerable<ClientOrdersDto>> GetAllClientsWithOrders();
+    
+    // Nuevo método para el ejercicio de doble consulta
+    Task<IEnumerable<ClientProductCountDto>> GetClientProductCounts();
 }

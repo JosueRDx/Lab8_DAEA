@@ -86,4 +86,20 @@ public class ClientService : IClientService
 
         return clientOrders;
     }
+    
+    // Implementación del nuevo método con doble Sum()
+    public async Task<IEnumerable<ClientProductCountDto>> GetClientProductCounts()
+    {
+        return await _unitOfWork.Repository<Client>()
+            .AsQueryable()
+            .AsNoTracking()
+            .Select(client => new ClientProductCountDto
+            {
+                ClientName = client.Name,
+                // Sumamos la cantidad de productos (Sum(detail.Quantity))
+                // para cada orden (Sum(order => ...))
+                TotalProducts = client.Orders.Sum(order => order.Orderdetails.Sum(detail => detail.Quantity))
+            })
+            .ToListAsync();
+    }
 }

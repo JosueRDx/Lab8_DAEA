@@ -52,4 +52,12 @@ public class ClientsController : ControllerBase
         var result = await _clientService.GetAllClientsWithOrders();
         return Ok(result);
     }
+    
+    // GET: api/clients/with-product-counts
+    [HttpGet("with-product-counts")]
+    public async Task<IActionResult> GetClientProductCounts()
+    {
+        var result = await _clientService.GetClientProductCounts();
+        return Ok(result);
+    }
 }
