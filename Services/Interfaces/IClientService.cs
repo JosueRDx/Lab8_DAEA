@@ -18,4 +18,7 @@ public interface IClientService
     
     // Nuevo método para el ejercicio de doble consulta
     Task<IEnumerable<ClientProductCountDto>> GetClientProductCounts();
+    
+    // Nuevo método para el ejercicio de agrupación
+    Task<IEnumerable<SalesByClientDto>> GetSalesByClient();
 }

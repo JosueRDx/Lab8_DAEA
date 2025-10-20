@@ -60,4 +60,12 @@ public class ClientsController : ControllerBase
         var result = await _clientService.GetClientProductCounts();
         return Ok(result);
     }
+    
+    // GET: api/clients/sales-report
+    [HttpGet("sales-report")]
+    public async Task<IActionResult> GetSalesByClient()
+    {
+        var result = await _clientService.GetSalesByClient();
+        return Ok(result);
+    }
 }

@@ -102,4 +102,22 @@ public class ClientService : IClientService
             })
             .ToListAsync();
     }
+    
+    // Implementación del nuevo método con GroupBy
+    public async Task<IEnumerable<SalesByClientDto>> GetSalesByClient()
+    {
+        return await _unitOfWork.Repository<Order>()
+            .AsQueryable()
+            .AsNoTracking()
+            .Include(order => order.Client) 
+            .GroupBy(order => order.Client.Name) 
+            .Select(group => new SalesByClientDto
+            {
+                ClientName = group.Key, 
+                TotalSales = group.SelectMany(order => order.Orderdetails)
+                    .Sum(detail => detail.Quantity * detail.Product.Price)
+            })
+            .OrderByDescending(s => s.TotalSales)
+            .ToListAsync();
+    }
 }
