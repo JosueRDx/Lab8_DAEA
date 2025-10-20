@@ -67,4 +67,21 @@ public class ProductService : IProductService
             })
             .ToListAsync();
     }
+    
+    // Implementación del método para la mejora propuesta
+    public async Task<IEnumerable<ProductPerformanceDto>> GetProductPerformanceReport()
+    {
+        return await _unitOfWork.Repository<Orderdetail>()
+            .AsQueryable()
+            .AsNoTracking()
+            .GroupBy(detail => detail.Product.Name) 
+            .Select(group => new ProductPerformanceDto
+            {
+                ProductName = group.Key,
+                TotalUnitsSold = group.Sum(detail => detail.Quantity),
+                TotalRevenue = group.Sum(detail => detail.Quantity * detail.Product.Price)
+            })
+            .OrderByDescending(report => report.TotalRevenue) 
+            .ToListAsync();
+    }
 }

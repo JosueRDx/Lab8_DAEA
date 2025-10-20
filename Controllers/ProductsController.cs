@@ -53,4 +53,12 @@ public class ProductsController : ControllerBase
         var products = await _productService.GetWithNoDescription();
         return Ok(products);
     }
+    
+    // GET: api/products/performance-report
+    [HttpGet("performance-report")]
+    public async Task<IActionResult> GetProductPerformanceReport()
+    {
+        var result = await _productService.GetProductPerformanceReport();
+        return Ok(result);
+    }
 }

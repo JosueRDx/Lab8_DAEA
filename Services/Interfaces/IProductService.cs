@@ -15,4 +15,7 @@ public interface IProductService
 
     // Ejercicio 8: Obtener Todos los Productos que No Tienen Descripción
     Task<IEnumerable<ProductDto>> GetWithNoDescription();
+    
+    // Método para la mejora propuesta
+    Task<IEnumerable<ProductPerformanceDto>> GetProductPerformanceReport();
 }
